@@ -1,6 +1,6 @@
 # margoth
 Aplicación para la rehabilitación cognitiva
-# Creación de aplicación: Carlos Guerra
+# Creación de aplicación: Carlos G
 
 [Twitter](https://twitter.com/carlos_war)
 
