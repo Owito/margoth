@@ -29,3 +29,11 @@ La aplicación cuenta con una interfaz de usuario intuitiva y accesible que es f
 Además, como proyecto de código abierto, la aplicación está disponible para que cualquiera pueda contribuir a su desarrollo y mejora. Todos los desarrolladores y usuarios interesados pueden acceder al código fuente en un repositorio de GitHub y contribuir a su mejora.
 
 En resumen, esta aplicación es un proyecto abierto y accesible que busca mejorar la memoria y la accesibilidad para todos. ¡Únete a nosotros y forma parte de esta emocionante iniciativa!
+
+# Definición del problema
+
+El problema que se plantea es la necesidad de mejorar la memoria de los pacientes. La memoria es una habilidad crucial en la vida cotidiana y su disminución puede tener un impacto negativo en la calidad de vida de una persona. Sin embargo, no todas las personas tienen acceso a recursos adecuados y efectivos para mejorar su memoria.
+
+Además, la falta de tiempo y la falta de interés en realizar ejercicios de memoria pueden ser obstáculos importantes para aquellos que desean mejorar su memoria. Por lo tanto, hay una necesidad de una solución accesible y motivadora que permita a los pacientes mejorar su memoria de manera efectiva y sin esfuerzo.
+
+El proyecto busca abordar este problema al crear una aplicación que proporcione ejercicios interactivos y juegos para mejorar la memoria, así como consejos y recursos adicionales para mejorar la memoria de manera efectiva. La aplicación también proporcionará un sistema de seguimiento y progreso para motivar a los pacientes a continuar con su progreso.
