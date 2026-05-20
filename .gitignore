@@ -3,6 +3,7 @@ __pycache__/
 *.pyo
 *.pyd
 .spec
+Margoth.spec
 .Python
 *.egg-info/
 dist/

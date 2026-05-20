@@ -6,6 +6,7 @@ import sys
 def main():
     project_root = os.path.dirname(os.path.abspath(__file__))
     entry = os.path.join(project_root, "src", "main.py")
+    src_path = os.path.join(project_root, "src")
     styles_src = os.path.join(project_root, "assets", "styles")
     add_data = f"{styles_src}{os.pathsep}assets/styles"
 
@@ -19,6 +20,8 @@ def main():
         "--onedir",
         "--noconfirm",
         "--clean",
+        "--paths",
+        src_path,
         "--add-data",
         add_data,
         entry,
