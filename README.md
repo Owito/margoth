@@ -10,7 +10,7 @@ Aplicación de escritorio 100% offline para intervención y rehabilitación cogn
 | **GUI** | PyQt6 (modo claro/oscuro nativo) |
 | **Persistencia** | SQLite local (preparado para migrar a pysqlcipher3) |
 | **Multimedia** | Pygame (audio in-memory) + Pillow |
-| **Distribución** | PyInstaller + Inno Setup - *Planificado* |
+| **Distribución** | PyInstaller + Inno Setup ✅ |
 
 ## Arquitectura MVC
 
@@ -27,7 +27,9 @@ margoth/
 │   ├── models/            # Lógica de datos (BD y Cifrado)
 │   ├── views/             # Componentes PyQt6
 │   ├── controllers/       # Lógica de negocio
-│   └── utils/             # Helpers (Gestor de temas, Audio)
+│   └── utils/             # Helpers (Gestor de temas, Audio, PathResolver)
+├── build_exe.py           # Script de compilación PyInstaller
+├── margoth_installer.iss  # Script de Inno Setup
 ├── requirements.txt
 └── README.md
 ```
@@ -45,25 +47,54 @@ margoth/
 - [ ] Base SQLite cifrada (pysqlcipher3)
 - [x] Carga de medios (fotos/audios)
 
-### Fase 3: Dashboard del Terapeuta 🟡
+### Fase 3: Dashboard del Terapeuta ✅
 - [x] Registro de pacientes
 - [x] Carga de material multimedia
-- [ ] Reportes de evolución
+- [x] Navegación SPA entre vistas
 
-### Fase 4: Módulos Clínicos 🟡
+### Fase 4: Módulos Clínicos ✅
 - [x] Tableros CAA (Comunicación Aumentativa y Alternativa)
-- [ ] Ejercicios semánticos evolutivos
+- [x] Ejercicios semánticos evolutivos
 
 ### Fase 5: Gestor de Medios Locales ✅
 - [x] Importación segura de medios por paciente
 - [x] Registro de medios en SQLite
 
-## Instalación
+### Fase 6: Constructor Visual de Tableros CAA ✅
+- [x] Interfaz de asignación de medios a grilla 2x2
+- [x] Persistencia de configuración en `caa_boards.json`
+- [x] Navegación limpia desde Dashboard
 
+### Fase 7: Ejercicios Semánticos con Métricas ✅
+- [x] Estímulo visual central con 3 opciones de respuesta
+- [x] Medición de tiempo de reacción con `time.perf_counter()`
+- [x] Registro de aciertos/fallos en tabla `exercise_metrics`
+
+### Fase 8: Empaquetado y Distribución ✅
+- [x] Helper de rutas `PathResolver` para modo dev/compilado
+- [x] Script de build PyInstaller (`build_exe.py`)
+- [x] Script de Inno Setup (`margoth_installer.iss`)
+- [x] Verificación de creación de `data/` y `media/` junto al binario
+
+## Instalación y Desarrollo
+
+### Ejecución local
 ```bash
 pip install -r requirements.txt
 python src/main.py
 ```
+
+### Compilación (Windows)
+```bash
+pip install pyinstaller
+python build_exe.py
+```
+El ejecutable se generará en `dist/Margoth/`.
+
+### Creación del instalador
+1. Instalar [Inno Setup](https://jrsoftware.org/isdl.php).
+2. Abrir `margoth_installer.iss` en Inno Setup.
+3. Compilar para obtener `dist/Margoth_Setup.exe`.
 
 ## Principios de Diseño
 
