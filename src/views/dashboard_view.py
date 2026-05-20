@@ -2,12 +2,15 @@ from PyQt6.QtWidgets import (
     QWidget, QHBoxLayout, QVBoxLayout, QFrame, QFormLayout,
     QLineEdit, QDateEdit, QPlainTextEdit, QPushButton,
     QTableWidget, QTableWidgetItem, QHeaderView, QAbstractItemView,
+    QFileDialog, QLabel,
 )
 from PyQt6.QtCore import pyqtSignal, Qt, QDate
 
 
 class DashboardView(QWidget):
     patient_save_requested = pyqtSignal(dict)
+    caa_requested = pyqtSignal(dict)
+    upload_requested = pyqtSignal(dict, str)
 
     def __init__(self):
         super().__init__()
@@ -65,7 +68,29 @@ class DashboardView(QWidget):
         self.patients_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.patients_table.horizontalHeader().setStretchLastSection(True)
         self.patients_table.verticalHeader().setVisible(False)
+        self.patients_table.itemSelectionChanged.connect(self._on_selection_changed)
         table_layout.addWidget(self.patients_table)
+
+        self.caa_btn = QPushButton("Abrir Tablero CAA")
+        self.caa_btn.setObjectName("themeToggle")
+        self.caa_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.caa_btn.setEnabled(False)
+        self.caa_btn.clicked.connect(self._on_caa_clicked)
+        table_layout.addWidget(self.caa_btn)
+
+        self.upload_btn = QPushButton("Subir Archivo (Foto/Audio)")
+        self.upload_btn.setObjectName("themeToggle")
+        self.upload_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.upload_btn.setEnabled(False)
+        self.upload_btn.clicked.connect(self._on_upload_clicked)
+        table_layout.addWidget(self.upload_btn)
+
+        self.message_label = QLabel("")
+        self.message_label.setObjectName("messageLabel")
+        self.message_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.message_label.setStyleSheet("font-size: 10pt; color: #666;")
+        self.message_label.hide()
+        table_layout.addWidget(self.message_label)
 
         # ── Ensamblar ────────────────────────────────────────────
         root_layout.addWidget(form_panel)
@@ -80,6 +105,42 @@ class DashboardView(QWidget):
         }
         if data["first_name"] and data["last_name"]:
             self.patient_save_requested.emit(data)
+
+    def _on_selection_changed(self):
+        has_selection = len(self.patients_table.selectedItems()) > 0
+        self.caa_btn.setEnabled(has_selection)
+        self.upload_btn.setEnabled(has_selection)
+
+    def _on_caa_clicked(self):
+        row = self.patients_table.currentRow()
+        if row < 0:
+            return
+        patient_id = int(self.patients_table.item(row, 0).text())
+        self.caa_requested.emit({"id": patient_id})
+
+    def _on_upload_clicked(self):
+        row = self.patients_table.currentRow()
+        if row < 0:
+            return
+
+        patient_id = int(self.patients_table.item(row, 0).text())
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Seleccionar archivo multimedia",
+            "",
+            "Im\u00e1genes (*.png *.jpg *.jpeg);;Audios (*.mp3 *.wav)",
+        )
+        if file_path:
+            self.upload_requested.emit({"id": patient_id}, file_path)
+
+    def show_message(self, text, is_error=False):
+        color = "#d32f2f" if is_error else "#388e3c"
+        self.message_label.setStyleSheet(f"font-size: 10pt; color: {color};")
+        self.message_label.setText(text)
+        self.message_label.show()
+
+        from PyQt6.QtCore import QTimer
+        QTimer.singleShot(3000, self.message_label.hide)
 
     def clear_form(self):
         self.first_name_input.clear()

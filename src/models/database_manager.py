@@ -41,6 +41,18 @@ class DatabaseManager:
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS patient_media (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                patient_id INTEGER NOT NULL,
+                file_name TEXT NOT NULL,
+                file_type TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (patient_id) REFERENCES patients(id)
+            )
+            """
+        )
         conn.commit()
 
     def close(self):
