@@ -8,14 +8,15 @@ Aplicación de escritorio 100% offline para intervención y rehabilitación cogn
 |------------|------------|
 | **Lenguaje** | Python 3.11+ |
 | **GUI** | PyQt6 (modo claro/oscuro nativo) |
-| **Persistencia** | SQLite cifrado (vía pysqlcipher3) - *En desarrollo* |
+| **Persistencia** | SQLite local (preparado para migrar a pysqlcipher3) |
+| **Multimedia** | Pygame (audio in-memory) + Pillow |
 | **Distribución** | PyInstaller + Inno Setup - *Planificado* |
 
 ## Arquitectura MVC
 
 ```text
 margoth/
-├── data/                  # Base de datos SQLite cifrada
+├── data/                  # Base de datos SQLite local
 ├── assets/                # Estilos QSS y recursos UI
 │   └── styles/
 │       ├── light.qss
@@ -33,25 +34,29 @@ margoth/
 
 ## Estado del Proyecto
 
-### Fase 1: Esqueleto MVC 
+### Fase 1: Esqueleto MVC ✅
 - [x] Estructura de directorios MVC
 - [x] Entry point con PyQt6
 - [x] Toggle dark/light mode
 - [x] Estilos QSS accesibles
 
-### Fase 2: Persistencia (Planificado) 
-- [ ] Modelo de datos para pacientes
-- [ ] Base SQLite cifrada
-- [ ] Carga de medios (fotos/audios)
+### Fase 2: Persistencia ✅
+- [x] Modelo de datos para pacientes
+- [ ] Base SQLite cifrada (pysqlcipher3)
+- [x] Carga de medios (fotos/audios)
 
-### Fase 3: Dashboard del Terapeuta (Planificado) 
-- [ ] Registro de pacientes
-- [ ] Carga de material multimedia
+### Fase 3: Dashboard del Terapeuta 🟡
+- [x] Registro de pacientes
+- [x] Carga de material multimedia
 - [ ] Reportes de evolución
 
-### Fase 4: Módulos Clínicos (Planificado) 
-- [ ] Tableros CAA (Comunicación Aumentativa y Alternativa)
+### Fase 4: Módulos Clínicos 🟡
+- [x] Tableros CAA (Comunicación Aumentativa y Alternativa)
 - [ ] Ejercicios semánticos evolutivos
+
+### Fase 5: Gestor de Medios Locales ✅
+- [x] Importación segura de medios por paciente
+- [x] Registro de medios en SQLite
 
 ## Instalación
 
