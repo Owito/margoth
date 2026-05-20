@@ -1,0 +1,30 @@
+QWidget {
+    background-color: #1E1E1E;
+    color: #E2E8F0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 12pt;
+}
+
+#headerBar {
+    background-color: #121212;
+    border-bottom: 1px solid #333333;
+}
+
+#headerTitle {
+    font-size: 16pt;
+    font-weight: bold;
+    color: #63B3ED;
+}
+
+#themeToggle {
+    background-color: #2D3748;
+    color: #E2E8F0;
+    border: 1px solid #4A5568;
+    border-radius: 6px;
+    padding: 5px 15px;
+    font-weight: bold;
+}
+
+#themeToggle:hover {
+    background-color: #4A5568;
+}
