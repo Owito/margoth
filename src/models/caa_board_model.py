@@ -109,3 +109,21 @@ class CAABoardModel:
                 json.dump(test_board, handle, indent=2, ensure_ascii=False)
         except OSError as exc:
             print(f"Error creando tablero de prueba: {exc}")
+
+    def save_board(self, patient_dict, board_data):
+        media_path = self._media_path(patient_dict)
+        if not media_path:
+            return False
+
+        os.makedirs(media_path, exist_ok=True)
+        json_path = os.path.join(media_path, "caa_boards.json")
+        payload = {"boards": [board_data]}
+
+        try:
+            with open(json_path, "w", encoding="utf-8") as handle:
+                json.dump(payload, handle, indent=2, ensure_ascii=False)
+        except OSError as exc:
+            print(f"Error guardando caa_boards.json: {exc}")
+            return False
+
+        return True
