@@ -53,6 +53,19 @@ class DatabaseManager:
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS exercise_metrics (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                patient_id INTEGER NOT NULL,
+                exercise_type TEXT NOT NULL,
+                is_correct BOOLEAN NOT NULL,
+                reaction_time_ms REAL NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (patient_id) REFERENCES patients(id)
+            )
+            """
+        )
         conn.commit()
 
     def close(self):

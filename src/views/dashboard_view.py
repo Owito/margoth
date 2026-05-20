@@ -11,6 +11,7 @@ class DashboardView(QWidget):
     patient_save_requested = pyqtSignal(dict)
     caa_requested = pyqtSignal(dict)
     builder_requested = pyqtSignal(dict)
+    exercise_requested = pyqtSignal(dict)
     upload_requested = pyqtSignal(dict, str)
 
     def __init__(self):
@@ -86,6 +87,13 @@ class DashboardView(QWidget):
         self.builder_btn.clicked.connect(self._on_builder_clicked)
         table_layout.addWidget(self.builder_btn)
 
+        self.exercise_btn = QPushButton("Iniciar Ejercicio Semántico")
+        self.exercise_btn.setObjectName("themeToggle")
+        self.exercise_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.exercise_btn.setEnabled(False)
+        self.exercise_btn.clicked.connect(self._on_exercise_clicked)
+        table_layout.addWidget(self.exercise_btn)
+
         self.upload_btn = QPushButton("Subir Archivo (Foto/Audio)")
         self.upload_btn.setObjectName("themeToggle")
         self.upload_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -118,6 +126,7 @@ class DashboardView(QWidget):
         has_selection = len(self.patients_table.selectedItems()) > 0
         self.caa_btn.setEnabled(has_selection)
         self.builder_btn.setEnabled(has_selection)
+        self.exercise_btn.setEnabled(has_selection)
         self.upload_btn.setEnabled(has_selection)
 
     def _on_caa_clicked(self):
@@ -133,6 +142,13 @@ class DashboardView(QWidget):
             return
         patient_id = int(self.patients_table.item(row, 0).text())
         self.builder_requested.emit({"id": patient_id})
+
+    def _on_exercise_clicked(self):
+        row = self.patients_table.currentRow()
+        if row < 0:
+            return
+        patient_id = int(self.patients_table.item(row, 0).text())
+        self.exercise_requested.emit({"id": patient_id})
 
     def _on_upload_clicked(self):
         row = self.patients_table.currentRow()
