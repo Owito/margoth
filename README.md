@@ -1,39 +1,76 @@
-# margoth
-Aplicación para la rehabilitación cognitiva
-# Creación de aplicación: Carlos G
+# Margoth - Rehabilitación Cognitiva y del Lenguaje
 
-[Twitter](https://twitter.com/carlos_war)
+Aplicación de escritorio 100% offline para intervención y rehabilitación cognitiva y del lenguaje. Diseñada para ofrecer una experiencia libre de sobrecarga cognitiva a los pacientes y garantizar la máxima privacidad de los datos clínicos.
 
-[LinkedIn](https://www.linkedin.com/in/consultordigitalcarlosguerra/)
+## Stack Tecnológico
 
-La memoria es un aspecto esencial de la vida humana que nos permite recordar información importante, experiencias y emociones a lo largo de nuestra vida. La memoria nos ayuda a aprender y adaptarnos a nuestro entorno, a recordar relaciones y situaciones importantes, a desarrollar habilidades y a tomar decisiones basadas en nuestras experiencias previas.
+| Componente | Tecnología |
+|------------|------------|
+| **Lenguaje** | Python 3.11+ |
+| **GUI** | PyQt6 (modo claro/oscuro nativo) |
+| **Persistencia** | SQLite cifrado (vía pysqlcipher3) - *En desarrollo* |
+| **Distribución** | PyInstaller + Inno Setup - *Planificado* |
 
-Además, la memoria es un componente clave de nuestra identidad y nos ayuda a mantener nuestra independencia y autonomía a medida que envejecemos. La capacidad de recordar información y experiencias es crucial para nuestra capacidad de comunicarnos con los demás, para realizar tareas cotidianas y para mantener nuestras habilidades cognitivas y mentales.
+## Arquitectura MVC
 
-![Memoria](https://images.unsplash.com/photo-1500051638674-ff996a0ec29e?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb)
+```text
+margoth/
+├── data/                  # Base de datos SQLite cifrada
+├── assets/                # Estilos QSS y recursos UI
+│   └── styles/
+│       ├── light.qss
+│       └── dark.qss
+├── media/                 # Fotos y audios locales de pacientes
+├── src/
+│   ├── main.py            # Entry point
+│   ├── models/            # Lógica de datos (BD y Cifrado)
+│   ├── views/             # Componentes PyQt6
+│   ├── controllers/       # Lógica de negocio
+│   └── utils/             # Helpers (Gestor de temas, Audio)
+├── requirements.txt
+└── README.md
+```
 
-Sin embargo, la memoria puede disminuir con la edad o como resultado de enfermedades o lesiones cerebrales. Es por eso que es importante cuidar y mejorar nuestra memoria a lo largo de nuestra vida. A través de ejercicios y entrenamiento, podemos mejorar nuestra capacidad de memoria y mantener nuestro cerebro en forma, lo que a su vez puede tener un impacto positivo en nuestra vida cotidiana.
+## Estado del Proyecto
 
-En el siguiente proyecto, me enfocaré en la creación de una experiencia de usuario y diseño atractivo para una aplicación destinada a mejorar la memoria. La aplicación será diseñada para ser fácil de usar y entender, proporcionando ejercicios interactivos y juegos para ayudar a los pacientes a mejorar su memoria de manera efectiva.
+### Fase 1: Esqueleto MVC ✅
+- [x] Estructura de directorios MVC
+- [x] Entry point con PyQt6
+- [x] Toggle dark/light mode
+- [x] Estilos QSS accesibles
 
-El enfoque será en crear un diseño atractivo e intuitivo, con una navegación clara y una interfaz de usuario fácil de usar. También se tomarán en cuenta aspectos importantes como la seguridad y la privacidad de los datos de los pacientes.
+### Fase 2: Persistencia (Planificado) 🔲
+- [ ] Modelo de datos para pacientes
+- [ ] Base SQLite cifrada
+- [ ] Carga de medios (fotos/audios)
 
-Mi objetivo es proporcionar una experiencia de usuario positiva y eficaz para los pacientes, lo que les permitirá lograr una mejora en su memoria de manera efectiva y motivadora. Estoy emocionado de llevar a cabo este proyecto y espero poder crear una aplicación que sea valiosa y útil para los pacientes.
+### Fase 3: Dashboard del Terapeuta (Planificado) 🔲
+- [ ] Registro de pacientes
+- [ ] Carga de material multimedia
+- [ ] Reportes de evolución
 
-## Open Source
+### Fase 4: Módulos Clínicos (Planificado) 🔲
+- [ ] Tableros CAA (Comunicación Aumentativa y Alternativa)
+- [ ] Ejercicios semánticos evolutivos
 
-Esta aplicación es un proyecto de código abierto diseñado para mejorar la accesibilidad y ayudar a las personas con diferentes necesidades. Se trata de una aplicación de memoria que utiliza un enfoque innovador para mejorar la capacidad de retener información y ayudar a los usuarios a recordar fácilmente los detalles importantes.
+## Instalación
 
-La aplicación cuenta con una interfaz de usuario intuitiva y accesible que es fácil de usar para todas las personas, independientemente de sus habilidades o discapacidades. También se han incorporado características de accesibilidad, como colores y tipografías contrastantes y funcionalidad de lectura de pantalla, para garantizar que todos los usuarios puedan utilizar la aplicación de manera efectiva.
+```bash
+pip install -r requirements.txt
+python src/main.py
+```
 
-Además, como proyecto de código abierto, la aplicación está disponible para que cualquiera pueda contribuir a su desarrollo y mejora. Todos los desarrolladores y usuarios interesados pueden acceder al código fuente en un repositorio de GitHub y contribuir a su mejora.
+## Principios de Diseño
 
-En resumen, esta aplicación es un proyecto abierto y accesible que busca mejorar la memoria y la accesibilidad para todos. ¡Únete a nosotros y forma parte de esta emocionante iniciativa!
+- **Cero sobrecarga cognitiva**: Interfaces minimalistas para pacientes (Teoría de Mayer)
+- **Accesibilidad**: Alto contraste, tipografías escalables (Segoe UI 12pt+)
+- **Privacidad**: 100% offline, datos locales cifrados
+- **Personalización**: Soporte para fotos y audios del entorno del paciente
 
-# Definición del problema
+## Contribuidores
 
-El problema que se plantea es la necesidad de mejorar la memoria de los pacientes. La memoria es una habilidad crucial en la vida cotidiana y su disminución puede tener un impacto negativo en la calidad de vida de una persona. Sin embargo, no todas las personas tienen acceso a recursos adecuados y efectivos para mejorar su memoria.
+- **Carlos G** - Creador y desarrollador principal
 
-Además, la falta de tiempo y la falta de interés en realizar ejercicios de memoria pueden ser obstáculos importantes para aquellos que desean mejorar su memoria. Por lo tanto, hay una necesidad de una solución accesible y motivadora que permita a los pacientes mejorar su memoria de manera efectiva y sin esfuerzo.
+## Licencia
 
-El proyecto busca abordar este problema al crear una aplicación que proporcione ejercicios interactivos y juegos para mejorar la memoria, así como consejos y recursos adicionales para mejorar la memoria de manera efectiva. La aplicación también proporcionará un sistema de seguimiento y progreso para motivar a los pacientes a continuar con su progreso.
+MIT
