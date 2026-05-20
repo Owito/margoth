@@ -1,4 +1,6 @@
 from views.main_window import MainWindow
+from views.dashboard_view import DashboardView
+from controllers.dashboard_controller import DashboardController
 
 
 class AppController:
@@ -9,6 +11,12 @@ class AppController:
         self.main_window = MainWindow()
 
         self.main_window.theme_toggle_requested.connect(self._on_theme_toggle)
+
+        # Dashboard del terapeuta
+        self.dashboard_view = DashboardView()
+        self.dashboard_controller = DashboardController(self.dashboard_view, self.patient_model)
+        self.main_window.set_main_view(self.dashboard_view)
+        self.dashboard_controller.initialize()
 
     def show_main_window(self):
         self.main_window.show()
