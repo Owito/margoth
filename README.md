@@ -33,23 +33,23 @@ margoth/
 
 ## Estado del Proyecto
 
-### Fase 1: Esqueleto MVC ✅
+### Fase 1: Esqueleto MVC 
 - [x] Estructura de directorios MVC
 - [x] Entry point con PyQt6
 - [x] Toggle dark/light mode
 - [x] Estilos QSS accesibles
 
-### Fase 2: Persistencia (Planificado) 🔲
+### Fase 2: Persistencia (Planificado) 
 - [ ] Modelo de datos para pacientes
 - [ ] Base SQLite cifrada
 - [ ] Carga de medios (fotos/audios)
 
-### Fase 3: Dashboard del Terapeuta (Planificado) 🔲
+### Fase 3: Dashboard del Terapeuta (Planificado) 
 - [ ] Registro de pacientes
 - [ ] Carga de material multimedia
 - [ ] Reportes de evolución
 
-### Fase 4: Módulos Clínicos (Planificado) 🔲
+### Fase 4: Módulos Clínicos (Planificado) 
 - [ ] Tableros CAA (Comunicación Aumentativa y Alternativa)
 - [ ] Ejercicios semánticos evolutivos
 
