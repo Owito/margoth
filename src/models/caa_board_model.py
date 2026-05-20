@@ -1,5 +1,6 @@
 import json
 import os
+from utils.path_resolver import PathResolver
 
 
 class CAABoardModel:
@@ -28,7 +29,8 @@ class CAABoardModel:
 
     def _media_path(self, patient_dict):
         media_folder = patient_dict.get("media_folder", "")
-        return os.path.join(self._db.media_dir, media_folder)
+        app_root = PathResolver.get_app_data_path()
+        return os.path.join(app_root, "media", media_folder)
 
     def load_first_board(self, patient_dict):
         media_path = self._media_path(patient_dict)

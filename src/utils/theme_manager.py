@@ -1,12 +1,13 @@
 import os
 from PyQt6.QtWidgets import QApplication
+from utils.path_resolver import PathResolver
 
 class ThemeManager:
     def __init__(self):
         self.current_theme = "light"
-        # Resuelve la ruta absoluta hacia assets/styles independientemente desde dónde se ejecute
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        self.styles_dir = os.path.join(base_dir, 'assets', 'styles')
+        self.styles_dir = PathResolver.get_resource_path(
+            os.path.join("assets", "styles")
+        )
 
     def apply_theme(self, theme_name):
         self.current_theme = theme_name

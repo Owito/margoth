@@ -1,14 +1,15 @@
 import sqlite3
 import os
+from utils.path_resolver import PathResolver
 
 
 class DatabaseManager:
     """Gestiona la conexión y el esquema de la base de datos SQLite local."""
 
     def __init__(self, db_filename="margoth.db"):
-        project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        self._data_dir = os.path.join(project_root, "data")
-        self._media_dir = os.path.join(project_root, "media")
+        app_root = PathResolver.get_app_data_path()
+        self._data_dir = os.path.join(app_root, "data")
+        self._media_dir = os.path.join(app_root, "media")
         self._db_path = os.path.join(self._data_dir, db_filename)
         self._connection = None
 
