@@ -75,6 +75,20 @@ margoth/
 - [x] Script de build PyInstaller (`build_exe.py`)
 - [x] Script de Inno Setup (`margoth_installer.iss`)
 - [x] Verificación de creación de `data/` y `media/` junto al binario
+- [x] Validación de ejecución del ejecutable compilado (`Margoth.exe`)
+
+## Verificación del Ejecutable Compilado
+
+Tras ejecutar `Margoth.exe` en `dist/Margoth/`:
+```
+dist/Margoth/
+├── data/
+│   └── margoth.db          # BD creada automáticamente
+├── media/                  # Carpeta lista para multimedia
+├── _internal/              # Dependencias empaquetadas
+└── Margoth.exe             # Binario aislado
+```
+El `PathResolver` confirma que las rutas se resuelven correctamente usando `sys.executable` como base en modo frozen.
 
 ## Instalación y Desarrollo
 
