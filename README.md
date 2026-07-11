@@ -114,8 +114,22 @@ El ejecutable se generará en `dist/Margoth/`.
 
 - **Cero sobrecarga cognitiva**: Interfaces minimalistas para pacientes (Teoría de Mayer)
 - **Accesibilidad**: Alto contraste, tipografías escalables (Segoe UI 12pt+)
-- **Privacidad**: 100% offline, datos locales cifrados
+- **Privacidad**: 100% offline. Los datos clínicos nunca salen del equipo (ver *Seguridad y privacidad*)
 - **Personalización**: Soporte para fotos y audios del entorno del paciente
+
+## Seguridad y privacidad
+
+- **Sin nube**: la aplicación no consume ni expone ninguna API de red. Todos
+  los datos (BD SQLite y medios) viven en el equipo del terapeuta.
+- **Aislamiento por paciente**: los medios se guardan en carpetas separadas
+  identificadas por UUID.
+- **Cifrado en reposo (pendiente)**: hoy la base de datos SQLite **no** está
+  cifrada. La migración a [SQLCipher](https://www.zetetic.net/sqlcipher/)
+  (vía `pysqlcipher3`) está planificada como mejora futura; se difirió porque
+  requiere binarios nativos que complican el empaquetado con PyInstaller en
+  Windows. Mientras tanto, la protección recae en el control de acceso del
+  sistema operativo. **No usar en un equipo compartido sin cuenta de usuario
+  protegida.**
 
 ## Contribuidores
 
