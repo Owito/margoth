@@ -63,6 +63,58 @@ def test_create_test_board_genera_grilla_2x2(db, patient_model):
     assert len(items) == 4
 
 
+def test_save_board_upsert_no_borra_otros(db, patient_model):
+    p = patient_model.create_patient("Ana", "García")
+    model = CAABoardModel(db)
+    b1 = {"id": "b1", "name": "Casa", "grid_size": {"rows": 2, "cols": 2}, "items": []}
+    b2 = {"id": "b2", "name": "Comida", "grid_size": {"rows": 3, "cols": 3}, "items": []}
+    model.save_board(p, b1)
+    model.save_board(p, b2)  # NO debe sobrescribir b1
+
+    tableros = model.list_boards(p)
+    assert len(tableros) == 2
+    ids = {t["id"] for t in tableros}
+    assert ids == {"b1", "b2"}
+
+
+def test_save_board_actualiza_existente_por_id(db, patient_model):
+    p = patient_model.create_patient("Ana", "García")
+    model = CAABoardModel(db)
+    model.save_board(p, {"id": "b1", "name": "Viejo", "items": []})
+    model.save_board(p, {"id": "b1", "name": "Nuevo", "items": []})
+    tableros = model.list_boards(p)
+    assert len(tableros) == 1
+    assert tableros[0]["name"] == "Nuevo"
+
+
+def test_save_board_sin_id_genera_uno(db, patient_model):
+    p = patient_model.create_patient("Ana", "García")
+    model = CAABoardModel(db)
+    model.save_board(p, {"name": "Sin id", "items": []})
+    tableros = model.list_boards(p)
+    assert len(tableros) == 1
+    assert tableros[0]["id"]  # id generado no vacío
+
+
+def test_load_board_por_id(db, patient_model):
+    p = patient_model.create_patient("Ana", "García")
+    model = CAABoardModel(db)
+    model.save_board(p, {"id": "b1", "name": "Uno", "grid_size": {"rows": 2, "cols": 2}, "items": []})
+    model.save_board(p, {"id": "b2", "name": "Dos", "grid_size": {"rows": 2, "cols": 2}, "items": []})
+    board, _ = model.load_board(p, "b2")
+    assert board["name"] == "Dos"
+
+
+def test_delete_board(db, patient_model):
+    p = patient_model.create_patient("Ana", "García")
+    model = CAABoardModel(db)
+    model.save_board(p, {"id": "b1", "name": "Uno", "items": []})
+    model.save_board(p, {"id": "b2", "name": "Dos", "items": []})
+    assert model.delete_board(p, "b1") is True
+    assert {t["id"] for t in model.list_boards(p)} == {"b2"}
+    assert model.delete_board(p, "inexistente") is False
+
+
 def test_load_first_board_json_corrupto_no_lanza(db, patient_model):
     p = patient_model.create_patient("Ana", "García")
     folder = os.path.join(db.media_dir, p["media_folder"])
