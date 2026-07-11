@@ -12,6 +12,7 @@ class DashboardView(QWidget):
     caa_requested = pyqtSignal(dict)
     builder_requested = pyqtSignal(dict)
     exercise_requested = pyqtSignal(dict)
+    reports_requested = pyqtSignal(dict)
     upload_requested = pyqtSignal(dict, str, str)
 
     def __init__(self):
@@ -94,6 +95,13 @@ class DashboardView(QWidget):
         self.exercise_btn.clicked.connect(self._on_exercise_clicked)
         table_layout.addWidget(self.exercise_btn)
 
+        self.reports_btn = QPushButton("Ver Reportes de Progreso")
+        self.reports_btn.setObjectName("themeToggle")
+        self.reports_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.reports_btn.setEnabled(False)
+        self.reports_btn.clicked.connect(self._on_reports_clicked)
+        table_layout.addWidget(self.reports_btn)
+
         self.media_label_input = QLineEdit()
         self.media_label_input.setPlaceholderText(
             "Etiqueta del medio (ej. 'Agua'). Opcional: si se deja vacía se usa el nombre del archivo."
@@ -134,6 +142,7 @@ class DashboardView(QWidget):
         self.caa_btn.setEnabled(has_selection)
         self.builder_btn.setEnabled(has_selection)
         self.exercise_btn.setEnabled(has_selection)
+        self.reports_btn.setEnabled(has_selection)
         self.upload_btn.setEnabled(has_selection)
         self.media_label_input.setEnabled(has_selection)
 
@@ -157,6 +166,13 @@ class DashboardView(QWidget):
             return
         patient_id = int(self.patients_table.item(row, 0).text())
         self.exercise_requested.emit({"id": patient_id})
+
+    def _on_reports_clicked(self):
+        row = self.patients_table.currentRow()
+        if row < 0:
+            return
+        patient_id = int(self.patients_table.item(row, 0).text())
+        self.reports_requested.emit({"id": patient_id})
 
     def _on_upload_clicked(self):
         row = self.patients_table.currentRow()
