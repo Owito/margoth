@@ -121,9 +121,11 @@ necesitas instalar Python ni tener conexión a internet.**
 1. Consigue el archivo **`Margoth_Setup.exe`** (te lo entrega quien distribuye la
    aplicación).
 2. Haz doble clic en `Margoth_Setup.exe`.
-3. Si Windows muestra el aviso azul *"Windows protegió tu PC"* (aparece porque
-   el instalador aún no está firmado digitalmente), haz clic en **"Más
-   información"** y luego en **"Ejecutar de todas formas"**.
+3. Si Windows muestra el aviso azul *"Windows protegió tu PC"*, haz clic en
+   **"Más información"** y luego en **"Ejecutar de todas formas"**.
+   > Este aviso no aparece si antes se instaló en el equipo el certificado de
+   > confianza de Margoth (ver *Firma de código* en la sección de Desarrollo).
+   > En una implementación gestionada, quien instala la app ya lo dejó listo.
 4. Sigue el asistente y pulsa *Instalar*. **No pide permisos de administrador**:
    se instala en tu carpeta de usuario.
 5. Al terminar, abre **Margoth** desde el acceso directo del **Escritorio** o
@@ -191,6 +193,44 @@ El ejecutable se generará en `dist/Margoth/`.
 1. Instalar [Inno Setup](https://jrsoftware.org/isdl.php).
 2. Abrir `margoth_installer.iss` en Inno Setup.
 3. Compilar para obtener `dist/Margoth_Setup.exe`.
+
+### Firma de código (equipos internos)
+
+La app y el instalador se firman con un certificado **auto-firmado**. Esto
+sirve para distribución interna (equipos que tú controlas): tras confiar el
+certificado en cada equipo, la firma es válida y desaparece el "Editor
+desconocido".
+
+> ⚠️ Un certificado auto-firmado **no** elimina SmartScreen para usuarios
+> externos/públicos. Para eso se necesita un certificado **EV** comprado
+> (~US$300-600/año, con token). El pipeline de abajo funciona igual con un
+> cert comprado: solo cambia el certificado usado.
+
+**Preparación (una sola vez, en el equipo de build):**
+```powershell
+# Crea el certificado y exporta signing\Margoth-CodeSigning.{cer,pfx}
+tools\New-CodeSigningCert.ps1 -PfxPassword "<una-contraseña>"
+```
+El `.pfx` (clave privada) es tu respaldo: guárdalo a salvo, **nunca lo subas**
+(la carpeta `signing/` está en `.gitignore`).
+
+**En cada release:**
+```powershell
+python build_exe.py            # 1. genera dist\Margoth\
+tools\sign.ps1 -AppOnly        # 2. firma Margoth.exe
+ISCC margoth_installer.iss     # 3. empaqueta el .exe ya firmado
+tools\sign.ps1 -InstallerOnly  # 4. firma Margoth_Setup.exe
+```
+Ambas firmas incluyen sello de tiempo RFC3161 (siguen válidas tras expirar el
+certificado).
+
+**En cada equipo donde se instale Margoth (una vez):**
+```powershell
+# Reparte signing\Margoth-CodeSigning.cer (es público) y ejecútalo allí:
+tools\Trust-MargothCert.ps1
+```
+Windows pedirá confirmar la instalación del certificado raíz (es normal).
+Después, `Margoth_Setup.exe` mostrará al editor **Carlos G** como válido.
 
 ## Principios de Diseño
 
