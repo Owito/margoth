@@ -13,7 +13,7 @@ SolidCompression=yes
 PrivilegesRequired=lowest
 SetupIconFile=assets\icon.ico
 UninstallDisplayIcon={app}\Margoth.exe
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64compatible
 
 [Dirs]
 Name: "{app}"; Permissions: users-modify
