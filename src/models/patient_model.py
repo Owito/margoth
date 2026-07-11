@@ -59,6 +59,31 @@ class PatientModel:
         conn.commit()
         return self.get_patient_by_id(patient_id)
 
+    def delete_patient(self, patient_id):
+        """Elimina el paciente, sus medios (BD + disco) y sus métricas.
+
+        Devuelve True si el paciente existía y fue eliminado.
+        """
+        patient = self.get_patient_by_id(patient_id)
+        if not patient:
+            return False
+
+        conn = self._db._get_connection()
+        # Borrar filas dependientes primero (los FK no declaran ON DELETE CASCADE)
+        conn.execute("DELETE FROM exercise_metrics WHERE patient_id = ?", (patient_id,))
+        conn.execute("DELETE FROM patient_media WHERE patient_id = ?", (patient_id,))
+        conn.execute("DELETE FROM patients WHERE id = ?", (patient_id,))
+        conn.commit()
+
+        # Borrar la carpeta de medios en disco
+        media_folder = patient.get("media_folder", "")
+        if media_folder:
+            folder_path = os.path.join(self._db.media_dir, media_folder)
+            if os.path.isdir(folder_path):
+                shutil.rmtree(folder_path, ignore_errors=True)
+
+        return True
+
     def import_media(self, patient_id, source_file_path, label=None):
         patient = self.get_patient_by_id(patient_id)
         if not patient:

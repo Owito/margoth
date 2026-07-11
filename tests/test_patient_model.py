@@ -138,6 +138,45 @@ def test_import_media_label_vacia_cae_al_nombre(patient_model, make_image):
     assert medio["label"] == "casa"
 
 
+def test_delete_patient_borra_todo_en_cascada(patient_model, db, make_image):
+    from models.semantic_exercise_model import SemanticExerciseModel
+
+    p = patient_model.create_patient("Ana", "García")
+    patient_model.import_media(p["id"], make_image("i.png"))
+    SemanticExerciseModel(db, patient_model).save_metric(p["id"], True, 100.0)
+    folder = os.path.join(db.media_dir, p["media_folder"])
+    assert os.path.isdir(folder)
+
+    assert patient_model.delete_patient(p["id"]) is True
+
+    # Paciente y dependencias eliminados
+    assert patient_model.get_patient_by_id(p["id"]) is None
+    assert patient_model.get_patient_media(p["id"]) == []
+    conn = db._get_connection()
+    n = conn.execute(
+        "SELECT COUNT(*) AS c FROM exercise_metrics WHERE patient_id = ?", (p["id"],)
+    ).fetchone()["c"]
+    assert n == 0
+    # Carpeta de medios borrada del disco
+    assert not os.path.exists(folder)
+
+
+def test_delete_patient_inexistente_devuelve_false(patient_model):
+    assert patient_model.delete_patient(999) is False
+
+
+def test_delete_patient_no_afecta_a_otros(patient_model, db, make_image):
+    a = patient_model.create_patient("Ana", "Uno")
+    b = patient_model.create_patient("Ben", "Dos")
+    patient_model.import_media(b["id"], make_image("b.png"))
+
+    patient_model.delete_patient(a["id"])
+
+    assert patient_model.get_patient_by_id(b["id"]) is not None
+    assert len(patient_model.get_patient_media(b["id"])) == 1
+    assert os.path.isdir(os.path.join(db.media_dir, b["media_folder"]))
+
+
 def test_get_file_type_extensiones(patient_model):
     assert patient_model._get_file_type("x.PNG") == "image"
     assert patient_model._get_file_type("x.jpeg") == "image"

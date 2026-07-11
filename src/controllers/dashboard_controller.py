@@ -3,6 +3,9 @@ class DashboardController:
         self._view = view
         self._model = patient_model
         self._view.patient_save_requested.connect(self._on_save_patient)
+        self._view.patient_update_requested.connect(self._on_update_patient)
+        self._view.patient_delete_requested.connect(self._on_delete_patient)
+        self._view.edit_requested.connect(self._on_edit_requested)
         self._view.upload_requested.connect(self._on_upload_media)
 
     def initialize(self):
@@ -17,6 +20,29 @@ class DashboardController:
         )
         self._view.clear_form()
         self.load_patients()
+
+    def _on_edit_requested(self, patient_ref):
+        patient = self._model.get_patient_by_id(patient_ref.get("id"))
+        if patient:
+            self._view.enter_edit_mode(patient)
+
+    def _on_update_patient(self, patient_id, data):
+        self._model.update_patient(
+            patient_id,
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+            birth_date=data["birth_date"],
+            notes=data["notes"],
+        )
+        self.load_patients()
+        self._view.show_message("Paciente actualizado correctamente")
+
+    def _on_delete_patient(self, patient_id):
+        if self._model.delete_patient(patient_id):
+            self.load_patients()
+            self._view.show_message("Paciente eliminado")
+        else:
+            self._view.show_message("No se pudo eliminar el paciente", is_error=True)
 
     def load_patients(self):
         patients = self._model.get_all_patients()
