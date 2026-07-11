@@ -117,6 +117,27 @@ def test_get_patient_media_filtra_por_tipo(patient_model, make_image, make_audio
     assert len(todos) == 2
 
 
+def test_import_media_guarda_label_explicita(patient_model, make_image):
+    p = patient_model.create_patient("Ana", "García")
+    patient_model.import_media(p["id"], make_image("IMG_9921.png"), label="Perro")
+    medio = patient_model.get_patient_media(p["id"], "image")[0]
+    assert medio["label"] == "Perro"
+
+
+def test_import_media_label_por_defecto_es_nombre_sin_extension(patient_model, make_image):
+    p = patient_model.create_patient("Ana", "García")
+    patient_model.import_media(p["id"], make_image("gato.png"))
+    medio = patient_model.get_patient_media(p["id"], "image")[0]
+    assert medio["label"] == "gato"
+
+
+def test_import_media_label_vacia_cae_al_nombre(patient_model, make_image):
+    p = patient_model.create_patient("Ana", "García")
+    patient_model.import_media(p["id"], make_image("casa.png"), label="   ")
+    medio = patient_model.get_patient_media(p["id"], "image")[0]
+    assert medio["label"] == "casa"
+
+
 def test_get_file_type_extensiones(patient_model):
     assert patient_model._get_file_type("x.PNG") == "image"
     assert patient_model._get_file_type("x.jpeg") == "image"

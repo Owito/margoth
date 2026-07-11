@@ -8,6 +8,14 @@ class SemanticExerciseModel:
         self._db = db_manager
         self._patient_model = patient_model
 
+    @staticmethod
+    def _label_of(row):
+        """Etiqueta legible del medio; cae al nombre de archivo si no hay label."""
+        label = (row["label"] or "").strip() if row["label"] is not None else ""
+        if label:
+            return label
+        return os.path.splitext(row["file_name"])[0]
+
     def _get_media_path(self, patient_id):
         patient = self._patient_model.get_patient_by_id(patient_id)
         if not patient:
@@ -25,7 +33,7 @@ class SemanticExerciseModel:
         conn = self._db._get_connection()
         row = conn.execute(
             """
-            SELECT file_name
+            SELECT file_name, label
             FROM patient_media
             WHERE patient_id = ? AND file_type = 'image'
             ORDER BY RANDOM()
@@ -49,12 +57,12 @@ class SemanticExerciseModel:
             print(f"Error leyendo imagen: {exc}")
             return None
 
-        correct_answer = os.path.splitext(file_name)[0]
+        correct_answer = self._label_of(row)
 
         false_options = []
         other_rows = conn.execute(
             """
-            SELECT file_name
+            SELECT file_name, label
             FROM patient_media
             WHERE patient_id = ? AND file_type = 'image' AND file_name != ?
             ORDER BY RANDOM()
@@ -64,7 +72,7 @@ class SemanticExerciseModel:
         ).fetchall()
 
         for other in other_rows:
-            false_options.append(os.path.splitext(other["file_name"])[0])
+            false_options.append(self._label_of(other))
 
         while len(false_options) < 2:
             false_options.append(f"Opción Falsa {len(false_options) + 1}")

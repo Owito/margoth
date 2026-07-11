@@ -139,7 +139,7 @@ class BuilderView(QWidget):
             file_name = media.get("file_name", "")
             if not file_name:
                 continue
-            item = QListWidgetItem(file_name)
+            item = QListWidgetItem(self._display_text(media))
             item.setData(
                 Qt.ItemDataRole.UserRole,
                 {"file_name": file_name, "file_type": "image"},
@@ -150,12 +150,19 @@ class BuilderView(QWidget):
             file_name = media.get("file_name", "")
             if not file_name:
                 continue
-            item = QListWidgetItem(file_name)
+            item = QListWidgetItem(self._display_text(media))
             item.setData(
                 Qt.ItemDataRole.UserRole,
                 {"file_name": file_name, "file_type": "audio"},
             )
             self.audio_list.addItem(item)
+
+    @staticmethod
+    def _display_text(media):
+        """Muestra la etiqueta legible; si no hay, el nombre del archivo."""
+        label = (media.get("label") or "").strip()
+        file_name = media.get("file_name", "")
+        return f"{label}  ·  {file_name}" if label else file_name
 
     def reset_board(self):
         self._board_data = self._default_board()

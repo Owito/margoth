@@ -59,6 +59,15 @@ def test_get_next_stimulus_construye_opciones(db, patient_model, make_image):
     assert len(set(stim["options"])) == 3  # sin duplicados
 
 
+def test_get_next_stimulus_usa_label_no_nombre_de_archivo(db, patient_model, make_image):
+    p = patient_model.create_patient("Ana", "García")
+    patient_model.import_media(p["id"], make_image("IMG_0001.png"), label="Manzana")
+    model = _model(db, patient_model)
+    stim = model.get_next_stimulus(p["id"])
+    assert stim["correct_answer"] == "Manzana"
+    assert "IMG_0001" not in stim["options"]
+
+
 def test_get_next_stimulus_una_sola_imagen_rellena_distractores(db, patient_model, make_image):
     p = patient_model.create_patient("Ana", "García")
     patient_model.import_media(p["id"], make_image("solo.png"))

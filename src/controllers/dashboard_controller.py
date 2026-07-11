@@ -22,9 +22,9 @@ class DashboardController:
         patients = self._model.get_all_patients()
         self._view.populate_table(patients)
 
-    def _on_upload_media(self, patient_ref, source_path):
+    def _on_upload_media(self, patient_ref, source_path, label=""):
         patient_id = patient_ref.get("id")
-        result = self._model.import_media(patient_id, source_path)
+        result = self._model.import_media(patient_id, source_path, label=label)
         if result:
             self._view.show_message(
                 f"Archivo '{result}' importado correctamente"

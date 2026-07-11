@@ -12,7 +12,7 @@ class DashboardView(QWidget):
     caa_requested = pyqtSignal(dict)
     builder_requested = pyqtSignal(dict)
     exercise_requested = pyqtSignal(dict)
-    upload_requested = pyqtSignal(dict, str)
+    upload_requested = pyqtSignal(dict, str, str)
 
     def __init__(self):
         super().__init__()
@@ -94,6 +94,13 @@ class DashboardView(QWidget):
         self.exercise_btn.clicked.connect(self._on_exercise_clicked)
         table_layout.addWidget(self.exercise_btn)
 
+        self.media_label_input = QLineEdit()
+        self.media_label_input.setPlaceholderText(
+            "Etiqueta del medio (ej. 'Agua'). Opcional: si se deja vacía se usa el nombre del archivo."
+        )
+        self.media_label_input.setEnabled(False)
+        table_layout.addWidget(self.media_label_input)
+
         self.upload_btn = QPushButton("Subir Archivo (Foto/Audio)")
         self.upload_btn.setObjectName("themeToggle")
         self.upload_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -128,6 +135,7 @@ class DashboardView(QWidget):
         self.builder_btn.setEnabled(has_selection)
         self.exercise_btn.setEnabled(has_selection)
         self.upload_btn.setEnabled(has_selection)
+        self.media_label_input.setEnabled(has_selection)
 
     def _on_caa_clicked(self):
         row = self.patients_table.currentRow()
@@ -163,7 +171,9 @@ class DashboardView(QWidget):
             "Im\u00e1genes (*.png *.jpg *.jpeg);;Audios (*.mp3 *.wav)",
         )
         if file_path:
-            self.upload_requested.emit({"id": patient_id}, file_path)
+            label = self.media_label_input.text().strip()
+            self.upload_requested.emit({"id": patient_id}, file_path, label)
+            self.media_label_input.clear()
 
     def show_message(self, text, is_error=False):
         color = "#d32f2f" if is_error else "#388e3c"
