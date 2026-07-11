@@ -1,6 +1,7 @@
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtWidgets import (
+    QComboBox,
     QFrame,
     QGridLayout,
     QHBoxLayout,
@@ -15,6 +16,7 @@ class CAABoardView(QWidget):
     item_clicked = pyqtSignal(str)
     back_requested = pyqtSignal()
     generate_test_requested = pyqtSignal()
+    board_change_requested = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -38,9 +40,15 @@ class CAABoardView(QWidget):
         self.board_title = QLabel("Tablero CAA")
         self.board_title.setObjectName("headerTitle")
 
+        self.board_selector = QComboBox()
+        self.board_selector.setMinimumWidth(180)
+        self.board_selector.currentIndexChanged.connect(self._on_board_changed)
+
         header_layout.addWidget(back_button)
         header_layout.addWidget(self.board_title)
         header_layout.addStretch()
+        header_layout.addWidget(QLabel("Tablero:"))
+        header_layout.addWidget(self.board_selector)
 
         self.grid_container = QFrame()
         self.grid_layout = QGridLayout(self.grid_container)
@@ -48,6 +56,24 @@ class CAABoardView(QWidget):
 
         root_layout.addWidget(header_bar)
         root_layout.addWidget(self.grid_container, 1)
+
+    def set_boards(self, boards, active_id=None):
+        """Rellena el selector de tableros sin disparar la señal de cambio."""
+        self.board_selector.blockSignals(True)
+        self.board_selector.clear()
+        for board in boards:
+            self.board_selector.addItem(board.get("name", "Tablero"), board.get("id"))
+        self.board_selector.setVisible(len(boards) > 1)
+        if active_id is not None:
+            idx = self.board_selector.findData(active_id)
+            if idx >= 0:
+                self.board_selector.setCurrentIndex(idx)
+        self.board_selector.blockSignals(False)
+
+    def _on_board_changed(self, _index):
+        board_id = self.board_selector.currentData()
+        if board_id:
+            self.board_change_requested.emit(board_id)
 
     def _clear_grid(self):
         while self.grid_layout.count():

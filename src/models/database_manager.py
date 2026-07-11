@@ -49,6 +49,7 @@ class DatabaseManager:
                 patient_id INTEGER NOT NULL,
                 file_name TEXT NOT NULL,
                 file_type TEXT NOT NULL,
+                label TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (patient_id) REFERENCES patients(id)
             )
@@ -67,7 +68,19 @@ class DatabaseManager:
             )
             """
         )
+        self._migrate(conn)
         conn.commit()
+
+    def _migrate(self, conn):
+        """Migraciones idempotentes para bases de datos ya existentes."""
+        # v2: etiqueta legible por medio (antes se usaba el nombre de archivo)
+        if not self._column_exists(conn, "patient_media", "label"):
+            conn.execute("ALTER TABLE patient_media ADD COLUMN label TEXT")
+
+    @staticmethod
+    def _column_exists(conn, table, column):
+        rows = conn.execute(f"PRAGMA table_info({table})").fetchall()
+        return any(row["name"] == column for row in rows)
 
     def close(self):
         if self._connection:

@@ -1,6 +1,9 @@
 [Setup]
 AppName=Margoth
-AppVersion=1.0.0
+AppVersion=1.1.0
+AppVerName=Margoth 1.1.0
+AppPublisher=Carlos G
+AppComments=Rehabilitación cognitiva y del lenguaje, 100% offline
 DefaultDirName={localappdata}\Margoth
 DefaultGroupName=Margoth
 OutputBaseFilename=Margoth_Setup
@@ -8,6 +11,7 @@ OutputDir=dist
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=lowest
+SetupIconFile=assets\icon.ico
 UninstallDisplayIcon={app}\Margoth.exe
 ArchitecturesInstallIn64BitMode=x64
 

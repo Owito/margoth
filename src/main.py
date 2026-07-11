@@ -4,10 +4,12 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QIcon
 from models.database_manager import DatabaseManager
 from models.patient_model import PatientModel
 from controllers.app_controller import AppController
 from utils.theme_manager import ThemeManager
+from utils.path_resolver import PathResolver
 
 
 def main():
@@ -18,6 +20,10 @@ def main():
 
     app = QApplication(sys.argv)
     app.setApplicationName("Margoth")
+
+    icon_path = PathResolver.get_resource_path(os.path.join("assets", "icon.png"))
+    if os.path.isfile(icon_path):
+        app.setWindowIcon(QIcon(icon_path))
 
     theme_manager = ThemeManager()
     theme_manager.apply_theme("light")

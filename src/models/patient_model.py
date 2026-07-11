@@ -59,7 +59,32 @@ class PatientModel:
         conn.commit()
         return self.get_patient_by_id(patient_id)
 
-    def import_media(self, patient_id, source_file_path):
+    def delete_patient(self, patient_id):
+        """Elimina el paciente, sus medios (BD + disco) y sus métricas.
+
+        Devuelve True si el paciente existía y fue eliminado.
+        """
+        patient = self.get_patient_by_id(patient_id)
+        if not patient:
+            return False
+
+        conn = self._db._get_connection()
+        # Borrar filas dependientes primero (los FK no declaran ON DELETE CASCADE)
+        conn.execute("DELETE FROM exercise_metrics WHERE patient_id = ?", (patient_id,))
+        conn.execute("DELETE FROM patient_media WHERE patient_id = ?", (patient_id,))
+        conn.execute("DELETE FROM patients WHERE id = ?", (patient_id,))
+        conn.commit()
+
+        # Borrar la carpeta de medios en disco
+        media_folder = patient.get("media_folder", "")
+        if media_folder:
+            folder_path = os.path.join(self._db.media_dir, media_folder)
+            if os.path.isdir(folder_path):
+                shutil.rmtree(folder_path, ignore_errors=True)
+
+        return True
+
+    def import_media(self, patient_id, source_file_path, label=None):
         patient = self.get_patient_by_id(patient_id)
         if not patient:
             return None
@@ -82,6 +107,11 @@ class PatientModel:
         final_filename = self._unique_filename(dest_dir, filename)
         dest_path = os.path.join(dest_dir, final_filename)
 
+        # Etiqueta legible: la provista, o el nombre del archivo sin extensión.
+        clean_label = (label or "").strip()
+        if not clean_label:
+            clean_label = os.path.splitext(filename)[0]
+
         try:
             shutil.copy2(source_file_path, dest_path)
         except (OSError, shutil.Error) as exc:
@@ -92,10 +122,10 @@ class PatientModel:
             conn = self._db._get_connection()
             conn.execute(
                 """
-                INSERT INTO patient_media (patient_id, file_name, file_type)
-                VALUES (?, ?, ?)
+                INSERT INTO patient_media (patient_id, file_name, file_type, label)
+                VALUES (?, ?, ?, ?)
                 """,
-                (patient_id, final_filename, file_type),
+                (patient_id, final_filename, file_type, clean_label),
             )
             conn.commit()
         except sqlite3.Error as exc:

@@ -1,4 +1,7 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QFrame, QPushButton, QLabel, QSpacerItem, QSizePolicy
+from PyQt6.QtWidgets import (
+    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QFrame, QPushButton,
+    QLabel, QSpacerItem, QSizePolicy, QStackedWidget,
+)
 from PyQt6.QtCore import pyqtSignal, Qt
 
 
@@ -38,19 +41,18 @@ class MainWindow(QMainWindow):
         header_layout.addItem(spacer)
         header_layout.addWidget(self.theme_btn)
 
-        # Área Central (inyectable)
-        self.content_area = QFrame()
-        self.content_layout = QVBoxLayout(self.content_area)
+        # Área Central (inyectable). Usamos un QStackedWidget para conservar
+        # las vistas (son singletons reutilizados por AppController); nunca se
+        # destruyen al navegar, solo se cambia la vista activa.
+        self.content_stack = QStackedWidget()
 
         main_layout.addWidget(header_bar)
-        main_layout.addWidget(self.content_area)
+        main_layout.addWidget(self.content_stack)
 
     def set_main_view(self, widget):
-        while self.content_layout.count():
-            item = self.content_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
-        self.content_layout.addWidget(widget)
+        if self.content_stack.indexOf(widget) == -1:
+            self.content_stack.addWidget(widget)
+        self.content_stack.setCurrentWidget(widget)
 
     def update_theme_button(self, current_theme):
         if current_theme == "dark":
