@@ -77,6 +77,25 @@ margoth/
 - [x] Verificación de creación de `data/` y `media/` junto al binario
 - [x] Validación de ejecución del ejecutable compilado (`Margoth.exe`)
 
+### Fase 9: Medios etiquetados ✅
+- [x] Columna `label` en `patient_media` (con migración idempotente)
+- [x] El ejercicio semántico usa etiquetas legibles, no el nombre de archivo
+- [x] Campo de etiqueta al subir un medio
+
+### Fase 10: Reportes y gestión de pacientes ✅
+- [x] Vista de reportes de progreso (aciertos, tiempos, tendencia diaria)
+- [x] Editar y eliminar pacientes (borrado en cascada de medios y métricas)
+
+### Fase 11: Tableros CAA múltiples ✅
+- [x] Varios tableros por paciente (upsert por id, sin sobrescribir)
+- [x] Tamaño de grilla configurable (1..4 × 1..4)
+- [x] Selector de tablero en el constructor y en el visor
+
+### Calidad ✅
+- [x] Suite de pruebas de la capa de modelos (`pytest`, 44 tests)
+- [x] Integración continua en GitHub Actions
+- [x] Ícono propio de la aplicación (`assets/icon.ico`)
+
 ## Verificación del Ejecutable Compilado
 
 Tras ejecutar `Margoth.exe` en `dist/Margoth/`:
@@ -96,6 +115,19 @@ El `PathResolver` confirma que las rutas se resuelven correctamente usando `sys.
 ```bash
 pip install -r requirements.txt
 python src/main.py
+```
+
+### Pruebas
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+La capa de modelos se prueba headless (sin PyQt6). El mismo comando corre en
+CI (GitHub Actions) en cada push y pull request.
+
+### Regenerar el ícono
+```bash
+python tools/generate_icon.py   # -> assets/icon.png y assets/icon.ico
 ```
 
 ### Compilación (Windows)
