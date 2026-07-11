@@ -109,7 +109,57 @@ dist/Margoth/
 ```
 El `PathResolver` confirma que las rutas se resuelven correctamente usando `sys.executable` como base en modo frozen.
 
-## Instalación y Desarrollo
+## Instalación (usuario final)
+
+Estas instrucciones son para el terapeuta que va a usar la aplicación. **No
+necesitas instalar Python ni tener conexión a internet.**
+
+**Requisitos:** Windows 10 u 11 (64 bits).
+
+### Pasos
+
+1. Consigue el archivo **`Margoth_Setup.exe`** (te lo entrega quien distribuye la
+   aplicación).
+2. Haz doble clic en `Margoth_Setup.exe`.
+3. Si Windows muestra el aviso azul *"Windows protegió tu PC"* (aparece porque
+   el instalador aún no está firmado digitalmente), haz clic en **"Más
+   información"** y luego en **"Ejecutar de todas formas"**.
+4. Sigue el asistente y pulsa *Instalar*. **No pide permisos de administrador**:
+   se instala en tu carpeta de usuario.
+5. Al terminar, abre **Margoth** desde el acceso directo del **Escritorio** o
+   del **menú Inicio**.
+
+La primera vez que la abras, la aplicación crea sola sus carpetas de datos; no
+tienes que configurar nada.
+
+### Dónde quedan tus datos
+
+Todo se guarda **en tu equipo**, en:
+
+```
+C:\Users\<tu-usuario>\AppData\Local\Margoth\
+├── data\margoth.db     # base de datos (pacientes, métricas)
+└── media\              # fotos y audios de cada paciente
+```
+
+> **Respaldo:** para tener una copia de seguridad, copia esa carpeta `Margoth`
+> a un disco externo o a la nube de tu preferencia.
+
+### Actualizar
+
+Ejecuta la versión nueva de `Margoth_Setup.exe`. Se instala sobre la anterior y
+**conserva tus datos**.
+
+### Desinstalar
+
+Abre *Configuración → Aplicaciones → Margoth → Desinstalar* (o usa el acceso de
+desinstalación del menú Inicio).
+
+> Al desinstalar, **tus datos (`data\` y `media\`) NO se borran** a propósito,
+> para no perder información clínica. Si además quieres eliminarlos, borra a mano
+> la carpeta `C:\Users\<tu-usuario>\AppData\Local\Margoth`.
+
+## Desarrollo
 
 ### Ejecución local
 ```bash
